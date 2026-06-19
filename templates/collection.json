@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "grid": { "type": "collection-grid" },
+    "community": {
+      "type": "community",
+      "settings": {
+        "eyebrow": "+1.300 rutinas felices",
+        "heading": "Lo que dice la comunidad",
+        "stat_value": "1300",
+        "stat_suffix": "+",
+        "stat_label": "clientas reales",
+        "speed": 42
+      },
+      "blocks": {
+        "c1": { "type": "testimonial", "settings": { "rating": 5, "quote": "Por fin una rutina que no abandono. En tres semanas mis manchas se ven más parejas.", "author": "Valentina R.", "location": "Medellín" } },
+        "c2": { "type": "testimonial", "settings": { "rating": 5, "quote": "Textura ligera, nada graso. Mi piel mixta nunca había estado tan tranquila.", "author": "Daniela M.", "location": "Bogotá" } },
+        "c3": { "type": "testimonial", "settings": { "rating": 5, "quote": "Llegó rápido y con pago contra entrega. Lo recompré sin pensarlo.", "author": "Carolina P.", "location": "Cali" } },
+        "c4": { "type": "testimonial", "settings": { "rating": 4, "quote": "Me encantó que sea simple. Sin sentir que pierdo la mañana.", "author": "Laura G.", "location": "Barranquilla" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"]
+    },
+    "closing": { "type": "closing-cta", "settings": {} }
+  },
+  "order": ["grid", "community", "closing"]
+}

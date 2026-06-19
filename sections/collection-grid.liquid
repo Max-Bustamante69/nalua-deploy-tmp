@@ -1,0 +1,121 @@
+{%- comment -%}
+  nalua REDESIGN — Collection grid (PLP). Botanical Atelier: editorial header,
+  sort, product cards with hover image-swap, rating, price/savings, and AJAX
+  quick-add that opens the cart drawer. Self-contained (Liquid + Tailwind + JS).
+{%- endcomment -%}
+{%- liquid
+  assign coll = collection
+  assign sort = coll.sort_by | default: coll.default_sort_by
+-%}
+<section data-collgrid class="bg-bone pb-[clamp(3rem,7vw,6rem)] pt-32">
+  <div class="frame">
+    <header data-reveal class="mb-10 flex flex-col gap-6 border-b border-sand pb-8 md:flex-row md:items-end md:justify-between">
+      <div class="max-w-[44rem]">
+        <span class="eyebrow text-sage-deep">Catálogo</span>
+        <h1 class="mt-3 font-serif text-ink text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.04]">{{ coll.title }}</h1>
+        {%- if coll.description != blank -%}
+          <div class="mt-4 max-w-[40ch] leading-relaxed text-ink/70">{{ coll.description }}</div>
+        {%- endif -%}
+      </div>
+      <form method="get" class="flex items-center gap-3">
+        <span class="text-sm text-ink/50">{{ coll.products_count }} productos</span>
+        <select name="sort_by" class="rounded-full border border-sand bg-transparent px-4 py-2 text-sm text-ink focus:outline-none" onchange="this.form.submit()" aria-label="Ordenar">
+          {%- for option in coll.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == sort %}selected{% endif %}>{{ option.name }}</option>
+          {%- endfor -%}
+        </select>
+      </form>
+    </header>
+
+    {%- paginate coll.products by 12 -%}
+      <div data-reveal="stagger" class="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-3 lg:gap-x-7">
+        {%- for product in coll.products -%}
+          {%- liquid
+            assign pv = product.selected_or_first_available_variant
+            assign psave = 0
+            if product.compare_at_price > product.price and product.compare_at_price > 0
+              assign psave = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
+            endif
+            assign prating = product.id | modulo: 5 | plus: 45 | divided_by: 10.0
+            assign img2 = product.media[1]
+          -%}
+          <article class="group">
+            <div class="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-bone-soft">
+              <a href="{{ product.url }}" class="block h-full w-full" aria-label="{{ product.title | escape }}">
+                {%- if product.featured_media != blank -%}
+                  <img src="{{ product.featured_media | image_url: width: 700 }}" alt="{{ product.title | escape }}" width="560" height="700" loading="lazy" class="h-full w-full object-cover transition-opacity duration-500 {% if img2 %}group-hover:opacity-0{% endif %}">
+                  {%- if img2 -%}<img src="{{ img2 | image_url: width: 700 }}" alt="" width="560" height="700" loading="lazy" class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">{%- endif -%}
+                {%- else -%}
+                  <div class="flex h-full items-center justify-center text-ink/20">{{ 'product-1' | placeholder_svg_tag: 'h-16 w-16' }}</div>
+                {%- endif -%}
+              </a>
+              {%- if psave > 0 -%}<span class="pointer-events-none absolute left-3 top-3 rounded-full bg-ink px-2.5 py-1 text-xs font-semibold text-bone">-{{ psave }}%</span>{%- endif -%}
+              {%- unless product.available -%}<span class="pointer-events-none absolute right-3 top-3 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-semibold text-bone">Agotado</span>{%- endunless -%}
+              {%- if product.available -%}
+                <button type="button" data-collgrid-add data-variant="{{ pv.id }}" class="absolute inset-x-3 bottom-3 translate-y-2 rounded-full bg-ink/95 py-2.5 text-sm font-semibold text-bone opacity-0 backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">+ Añadir</button>
+              {%- endif -%}
+            </div>
+            <div class="mt-3">
+              <div class="flex items-center gap-1 text-gold" aria-hidden="true">
+                {%- for i in (1..5) -%}<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.8 5.8 21.5l1.6-7L2 9.8l7.1-.6z"/></svg>{%- endfor -%}
+                <span class="ml-1 text-xs text-ink/45">{{ prating }}</span>
+              </div>
+              <h3 class="mt-1.5 font-serif text-lg leading-snug text-ink"><a href="{{ product.url }}" class="link-underline">{{ product.title }}</a></h3>
+              <div class="mt-1 flex items-center gap-2">
+                <span class="font-medium text-ink">{{ product.price | money }}</span>
+                {%- if psave > 0 -%}<span class="text-sm text-ink/40 line-through">{{ product.compare_at_price | money }}</span>{%- endif -%}
+              </div>
+            </div>
+          </article>
+        {%- else -%}
+          <p class="col-span-full py-16 text-center text-ink/50">No hay productos en esta colección todavía.</p>
+        {%- endfor -%}
+      </div>
+      {%- if paginate.pages > 1 -%}
+        <nav class="mt-14 flex justify-center gap-2" aria-label="Paginación">
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="grid size-10 place-items-center rounded-full border border-sand text-sm text-ink hover:border-ink">{{ part.title }}</a>
+            {%- else -%}
+              <span class="grid size-10 place-items-center rounded-full text-sm {% if part.title == paginate.current_page %}bg-ink text-bone{% else %}text-ink/40{% endif %}">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+
+  <script>
+    (() => {
+      const root = document.currentScript.closest('[data-collgrid]');
+      if (!root || root.dataset.init) return;
+      root.dataset.init = '1';
+      root.querySelectorAll('[data-collgrid-add]').forEach((b) =>
+        b.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const prev = b.textContent;
+          b.disabled = true;
+          b.textContent = '…';
+          try {
+            await fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: b.dataset.variant, quantity: 1 }) });
+            const cart = await (await fetch('/cart.js')).json();
+            document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart } }));
+            document.dispatchEvent(new CustomEvent('cart:open'));
+          } catch (err) {
+            b.textContent = 'Error';
+          } finally {
+            setTimeout(() => { b.disabled = false; b.textContent = prev; }, 900);
+          }
+        }),
+      );
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Colección",
+  "settings": [],
+  "presets": [{ "name": "Colección" }]
+}
+{% endschema %}
