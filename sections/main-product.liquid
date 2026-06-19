@@ -125,10 +125,10 @@
             <span data-pdp-atc-label>{% if p.available %}{{ section.settings.atc_label | default: 'Añadir al carrito' }}{% else %}Agotado{% endif %}</span>
           </button>
         </div>
-        {%- form 'product', p, class: 'mt-3' -%}
+        <form action="/cart/add" method="post" class="mt-3">
           <input type="hidden" name="id" value="{{ v.id }}">
-          {{ form | payment_button }}
-        {%- endform -%}
+          <button type="submit" class="link-underline mx-auto block text-sm text-ink/55">Comprar ahora →</button>
+        </form>
 
         {%- comment -%} ---- Free-ship + trust ---- {%- endcomment -%}
         {%- if section.settings.free_ship_threshold > 0 -%}
