@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "t1": { "type": "trust", "settings": { "label": "Recibe en 72h o antes" } },
+        "t2": { "type": "trust", "settings": { "label": "30 días de garantía" } },
+        "t3": { "type": "trust", "settings": { "label": "Pago contra entrega" } }
+      },
+      "block_order": ["t1", "t2", "t3"]
+    },
+    "results": {
+      "type": "results",
+      "settings": {
+        "eyebrow": "Resultados reales",
+        "heading": "Lo que cambia cuando eres constante",
+        "body": "<p>No prometemos milagros de un día. Prometemos una rutina que sí vas a repetir — y eso es lo que de verdad transforma tu piel.</p>",
+        "cta_label": "Ver más productos"
+      },
+      "blocks": {
+        "s1": { "type": "stat", "settings": { "value": "92", "suffix": "%", "decimals": 0, "label": "notó la piel más uniforme*" } },
+        "s2": { "type": "stat", "settings": { "value": "1300", "suffix": "+", "decimals": 0, "label": "rutinas en marcha" } },
+        "s3": { "type": "stat", "settings": { "value": "4.8", "suffix": "/5", "decimals": 1, "label": "valoración promedio" } }
+      },
+      "block_order": ["s1", "s2", "s3"]
+    },
+    "community": {
+      "type": "community",
+      "settings": {
+        "eyebrow": "Opiniones verificadas",
+        "heading": "Lo que dice la comunidad",
+        "stat_value": "1300",
+        "stat_suffix": "+",
+        "stat_label": "clientas reales",
+        "speed": 42
+      },
+      "blocks": {
+        "c1": { "type": "testimonial", "settings": { "rating": 5, "quote": "Por fin una rutina que no abandono. En tres semanas mis manchas se ven más parejas.", "author": "Valentina R.", "location": "Medellín" } },
+        "c2": { "type": "testimonial", "settings": { "rating": 5, "quote": "Textura ligera, nada graso. Mi piel mixta nunca había estado tan tranquila.", "author": "Daniela M.", "location": "Bogotá" } },
+        "c3": { "type": "testimonial", "settings": { "rating": 5, "quote": "Llegó rápido y con pago contra entrega. Lo recompré sin pensarlo.", "author": "Carolina P.", "location": "Cali" } },
+        "c4": { "type": "testimonial", "settings": { "rating": 4, "quote": "Me encantó que sea simple. Sin sentir que pierdo la mañana.", "author": "Laura G.", "location": "Barranquilla" } },
+        "c5": { "type": "testimonial", "settings": { "rating": 5, "quote": "La constancia valió la pena. Mi piel se siente mía otra vez.", "author": "Sara T.", "location": "Pereira" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4", "c5"]
+    },
+    "closing": { "type": "closing-cta", "settings": {} }
+  },
+  "order": ["main", "results", "community", "closing"]
+}
